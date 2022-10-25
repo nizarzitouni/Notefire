@@ -26,7 +26,7 @@ class _SignUpState extends State<SignUp> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: bgColor,
+        backgroundColor: MyColors.bgColor,
       ),
       body: ListView(
         children: <Widget>[
@@ -40,7 +40,7 @@ class _SignUpState extends State<SignUp> {
                     blurRadius: 25.0,
                   )
                 ],
-                color: bgColor,
+                color: MyColors.bgColor,
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(32),
                     bottomRight: Radius.circular(32))),
@@ -89,7 +89,7 @@ class _SignUpState extends State<SignUp> {
                     style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: white.withOpacity(.9)),
+                        color: MyColors.white.withOpacity(.9)),
                   ),
                 ),
                 Container(
@@ -99,7 +99,7 @@ class _SignUpState extends State<SignUp> {
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.normal,
-                        color: white.withOpacity(.7)),
+                        color: MyColors.white.withOpacity(.7)),
                   ),
                 ),
                 Form(
@@ -129,20 +129,22 @@ class _SignUpState extends State<SignUp> {
                             return null;
                           },
                           style: TextStyle(
-                              fontSize: 18, color: white.withOpacity(.8)),
+                              fontSize: 18,
+                              color: MyColors.white.withOpacity(.8)),
                           keyboardType: TextInputType.text,
                           textCapitalization: TextCapitalization.words,
                           decoration: InputDecoration(
                             hintText: 'Name',
-                            hintStyle: TextStyle(color: white.withOpacity(.5)),
+                            hintStyle: TextStyle(
+                                color: MyColors.white.withOpacity(.5)),
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                borderSide:
-                                    BorderSide(color: white.withOpacity(.5))),
+                                borderSide: BorderSide(
+                                    color: MyColors.white.withOpacity(.5))),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                borderSide:
-                                    BorderSide(color: white.withOpacity(.5))),
+                                borderSide: BorderSide(
+                                    color: MyColors.white.withOpacity(.5))),
                           ),
                         ),
                       ),
@@ -170,18 +172,20 @@ class _SignUpState extends State<SignUp> {
                           },
                           keyboardType: TextInputType.emailAddress,
                           style: TextStyle(
-                              fontSize: 18, color: white.withOpacity(.8)),
+                              fontSize: 18,
+                              color: MyColors.white.withOpacity(.8)),
                           decoration: InputDecoration(
                             hintText: 'E-Mail Address',
-                            hintStyle: TextStyle(color: white.withOpacity(.5)),
+                            hintStyle: TextStyle(
+                                color: MyColors.white.withOpacity(.5)),
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                borderSide:
-                                    BorderSide(color: white.withOpacity(.5))),
+                                borderSide: BorderSide(
+                                    color: MyColors.white.withOpacity(.5))),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                borderSide:
-                                    BorderSide(color: white.withOpacity(.5))),
+                                borderSide: BorderSide(
+                                    color: MyColors.white.withOpacity(.5))),
                           ),
                         ),
                       ),
@@ -210,19 +214,21 @@ class _SignUpState extends State<SignUp> {
                           },
                           obscureText: true,
                           style: TextStyle(
-                              fontSize: 18, color: white.withOpacity(.8)),
+                              fontSize: 18,
+                              color: MyColors.white.withOpacity(.8)),
                           keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                             hintText: 'Password',
-                            hintStyle: TextStyle(color: white.withOpacity(.5)),
+                            hintStyle: TextStyle(
+                                color: MyColors.white.withOpacity(.5)),
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                borderSide:
-                                    BorderSide(color: white.withOpacity(.5))),
+                                borderSide: BorderSide(
+                                    color: MyColors.white.withOpacity(.5))),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                borderSide:
-                                    BorderSide(color: white.withOpacity(.5))),
+                                borderSide: BorderSide(
+                                    color: MyColors.white.withOpacity(.5))),
                           ),
                         ),
                       ),

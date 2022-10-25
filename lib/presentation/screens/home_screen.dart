@@ -9,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:note_fire/core/constants.dart';
 import 'package:note_fire/core/my_colors.dart';
 import 'package:note_fire/core/size_config.dart';
+import 'package:note_fire/presentation/screens/edit_note.dart';
 import 'package:note_fire/presentation/widgets/note_tile.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -39,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       //extendBodyBehindAppBar: true, //so background takes all the screen
-      backgroundColor: bgColor,
+      backgroundColor: MyColors.bgColor,
       floatingActionButton: FloatingActionButton(
         backgroundColor: MyColors.myOrange,
         onPressed: () {
@@ -47,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         child: Icon(
           Icons.add,
-          color: Colors.white,
+          color: MyColors.white,
           size: 30,
         ),
       ),
@@ -138,11 +139,20 @@ class _HomeScreenState extends State<HomeScreen> {
               return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
-                    return NoteTile(
-                        noteTitile:
-                            snapshot.data!.docs[index]["title"].toString(),
-                        noteBody:
-                            snapshot.data!.docs[index]["note"].toString());
+                    final DocumentSnapshot noteRow = snapshot.data!.docs[index];
+                    return _noteTile(noteSnapshot: noteRow
+                        // docId: noteRow.id,
+                        // noteBody: noteRow["note"].toString(),
+                        // noteTitile:
+                        //     noteRow["title"].toString(),
+                        );
+                    //openForEdit: _navToEdit(snapshot.data!.docs[index].id));
+                    // NoteTile(
+                    //   openForEdit: _navToEdit(snapshot.data!.docs[index].id),
+                    //   noteTitile:
+                    //       snapshot.data!.docs[index]["title"].toString(),
+                    //   noteBody: snapshot.data!.docs[index]["note"].toString(),
+                    // );
                   });
             } else {
               return Column(
@@ -160,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.w400,
-                        color: white,
+                        color: MyColors.white,
                       ),
                     ),
                   ),
@@ -188,10 +198,10 @@ class _HomeScreenState extends State<HomeScreen> {
               width: SizeConfig.screenWidth,
               height: 45,
               decoration: BoxDecoration(
-                  color: cardColor,
+                  color: MyColors.cardColor,
                   boxShadow: [
                     BoxShadow(
-                      color: black.withOpacity(0.2),
+                      color: MyColors.black.withOpacity(0.2),
                       spreadRadius: 1,
                       blurRadius: 3,
                     )
@@ -210,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             },
                             child: Icon(
                               Icons.menu,
-                              color: white.withOpacity(0.7),
+                              color: MyColors.white.withOpacity(0.7),
                             )),
                       ],
                     )
@@ -218,6 +228,58 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _noteTile({noteSnapshot}) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushNamed(editNote, arguments: noteSnapshot);
+      },
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+            child: Container(
+              width: SizeConfig.screenWidth,
+              decoration: BoxDecoration(
+                  color: MyColors.cardColor,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: MyColors.white.withOpacity(0.1))),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 8, right: 8, top: 12, bottom: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      noteSnapshot["title"].toString(),
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                        color: MyColors.white.withOpacity(0.9),
+                      ),
+                    ),
+                    SizedBox(height: 8.0),
+                    Text(
+                      noteSnapshot["note"].toString(),
+                      style: TextStyle(
+                        fontSize: 15,
+                        height: 1.5,
+                        fontWeight: FontWeight.w400,
+                        color: MyColors.white.withOpacity(0.7),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 15.0,
           ),
         ],
       ),

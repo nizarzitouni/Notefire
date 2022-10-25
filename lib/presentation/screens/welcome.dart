@@ -9,7 +9,7 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: MyColors.bgColor,
       body: Stack(
         children: <Widget>[
           Align(
@@ -22,7 +22,7 @@ class WelcomePage extends StatelessWidget {
                   style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
-                      color: white.withOpacity(.9)),
+                      color: MyColors.white.withOpacity(.9)),
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 32, bottom: 16),
@@ -35,7 +35,8 @@ class WelcomePage extends StatelessWidget {
                   child: TextButton(
                     child: Text('Sign In',
                         style: TextStyle(
-                            fontSize: 20, color: white.withOpacity(.9))),
+                            fontSize: 20,
+                            color: MyColors.white.withOpacity(.9))),
                     onPressed: () {
                       Navigator.of(context).pushNamed(signInScreen);
                     },
@@ -65,7 +66,7 @@ class WelcomePage extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.normal,
-                          color: white.withOpacity(.6)),
+                          color: MyColors.white.withOpacity(.6)),
                     ),
                     SizedBox(
                       width: 8,

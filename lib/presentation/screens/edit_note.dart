@@ -9,32 +9,39 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:note_fire/core/my_colors.dart';
 import 'package:note_fire/core/size_config.dart';
-import 'package:note_fire/core/utility.dart';
-import 'package:note_fire/models/photo.dart';
 import 'package:path/path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-class AddNote extends StatefulWidget {
-  const AddNote({Key? key}) : super(key: key);
+class EditNote extends StatefulWidget {
+  final DocumentSnapshot noteSnapshot;
+  //Map? dataMap;
+
+  EditNote({
+    Key? key,
+    required this.noteSnapshot,
+    //required this.dataMap,
+  }) : super(key: key);
 
   @override
-  State<AddNote> createState() => _AddNoteState();
+  State<EditNote> createState() => _EditNoteState();
 }
 
-class _AddNoteState extends State<AddNote> {
-  //to upload files
-  File? file;
+class _EditNoteState extends State<EditNote> {
   //Form fields
   late String noteTitle, noteBody, imageUrl;
   GlobalKey<FormState> formstate = GlobalKey<FormState>();
 
-  late Reference ref;
-  //
+  // late Reference ref;
+  // //
   CollectionReference noteRefs = FirebaseFirestore.instance.collection("notes");
+  //  Future<DocumentSnapshot<Object?>> _getDoc() async {
+  //   return await noteRefs.doc(widget.docId).get();
+  // }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    //Future<DocumentSnapshot<Object?>> note = _getDoc();
     return Scaffold(
       backgroundColor: MyColors.bgColor,
       appBar: AppBar(
@@ -50,7 +57,7 @@ class _AddNoteState extends State<AddNote> {
             ),
             SizedBox(width: 8.0),
             Text(
-              "ADD",
+              "UPDATE",
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.w400,
@@ -118,6 +125,7 @@ class _AddNoteState extends State<AddNote> {
                           fontSize: 15, color: MyColors.white.withOpacity(.8)),
                       keyboardType: TextInputType.text,
                       textCapitalization: TextCapitalization.words,
+                      initialValue: widget.noteSnapshot["title"].toString(),
                       decoration: InputDecoration(
                         hintText: 'Note Title',
                         hintStyle:
@@ -173,6 +181,7 @@ class _AddNoteState extends State<AddNote> {
                       keyboardType: TextInputType.emailAddress,
                       style: TextStyle(
                           fontSize: 17, color: MyColors.white.withOpacity(.8)),
+                      initialValue: widget.noteSnapshot["note"].toString(),
                       decoration: InputDecoration(
                         hintText: 'Write Your Note',
                         hintStyle:
@@ -188,26 +197,6 @@ class _AddNoteState extends State<AddNote> {
                       ),
                     ),
                   ),
-                  //Upload Button
-                  // Container(
-                  //   margin: EdgeInsets.only(top: 12, bottom: 16),
-                  //   decoration: BoxDecoration(
-                  //     color: MyColors.myYellow,
-                  //     shape: BoxShape.rectangle,
-                  //     borderRadius: BorderRadius.all(Radius.circular(8)),
-                  //   ),
-                  //   width: SizeConfig.screenWidth * .9,
-                  //   child: TextButton(
-                  //       child: Text('UPLOAD IMAGE',
-                  //           style:
-                  //               TextStyle(fontSize: 22, color: Colors.white)),
-                  //       onPressed: null
-                  // () async {
-                  //
-                  //showBottomSheet(context);
-                  // },
-                  //       ),
-                  // ),
                   Center(
                     child: Container(
                       margin: EdgeInsets.only(top: 25, bottom: 16),
@@ -218,12 +207,12 @@ class _AddNoteState extends State<AddNote> {
                       ),
                       width: SizeConfig.screenWidth * 0.8,
                       child: TextButton(
-                        child: Text('ADD NOTE',
+                        child: Text('UPDATE NOTE',
                             style:
                                 TextStyle(fontSize: 17, color: MyColors.white)),
                         onPressed: () async {
                           //
-                          await addNote();
+                          await updateNote();
                           Navigator.of(context).pop();
                         },
                       ),
@@ -238,144 +227,26 @@ class _AddNoteState extends State<AddNote> {
     );
   }
 
-  addNote() async {
+  updateNote() async {
     var formData = formstate.currentState;
     if (formData!.validate()) {
-      debugPrint(
-          '---------------------- Fields are Valid----------------------');
       //trigger on save fucn in each button to save the values
+
       formData.save();
-      // //save image to storage
-      // await ref.putFile(file!);
-      // imageUrl = await ref.getDownloadURL();
-      //showLoadingIndicator();
-      //add the note to firestorage
-      await noteRefs.add({
+      await noteRefs.doc(widget.noteSnapshot.id).update({
         "title": noteTitle,
         "note": noteBody,
-        "image_url": null, //imageUrl,
         "user_id": FirebaseAuth.instance.currentUser!.uid,
       });
     } else {
       debugPrint(
           '----------------------Infos are Not Valid----------------------');
-      //return null;
     }
   }
 
   Widget showLoadingIndicator() {
     return Center(
       child: CircularProgressIndicator(color: MyColors.myYellow),
-    );
-  }
-
-  showBottomSheet(context) async {
-    return showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Container(
-          padding: EdgeInsets.all(20),
-          height: SizeConfig.screenHeight * .25,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Please Choose Image',
-                style: TextStyle(
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              SizedBox(
-                height: 12.0,
-              ),
-              InkWell(
-                onTap: () async {
-                  XFile? picked = await ImagePicker()
-                      .pickImage(source: ImageSource.gallery);
-                  if (picked != null) {
-                    file = File(picked.path);
-                    int random = Random().nextInt(100000);
-                    //this prints the image name.png with random number
-                    String imageName = "$random${basename(picked.path)}";
-                    //upload
-                    ref =
-                        FirebaseStorage.instance.ref("images").child(imageName);
-                    Navigator.of(context).pop();
-                  }
-
-                  pickImageFromGallery() {
-                    ImagePicker()
-                        .pickImage(source: ImageSource.gallery)
-                        .then((imgFile) async {
-                      String imgString =
-                          Utility.base64String(await imgFile!.readAsBytes());
-                      // print(imgString);
-                      Photo photo1 = Photo(0, imgString);
-                      //dbHelper.save(photo1);
-                      //refreshImages();
-                    });
-                  }
-                },
-                child: Container(
-                  width: SizeConfig.screenWidth,
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    children: [
-                      Icon(Icons.photo_album_outlined, size: 30),
-                      SizedBox(width: 12.0),
-                      Text(
-                        'From Gallery',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () async {
-                  var picked =
-                      await ImagePicker().pickImage(source: ImageSource.camera);
-
-                  if (picked != null) {
-                    file = File(picked.path);
-                    var random = Random().nextInt(100000);
-                    var imageName = "$random${basename(picked.path)}";
-
-                    ref =
-                        FirebaseStorage.instance.ref("images").child(imageName);
-
-                    Navigator.of(context).pop();
-                  }
-                },
-                child: Container(
-                  width: SizeConfig.screenWidth,
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    children: [
-                      Icon(Icons.camera, size: 30),
-                      SizedBox(width: 12.0),
-                      Text(
-                        'From Camera',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        );
-      },
     );
   }
 }

@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:note_fire/presentation/screens/edit_note.dart';
 import 'presentation/screens/home_screen.dart';
 import 'presentation/screens/welcome.dart';
 import 'core/constants.dart';
@@ -8,6 +10,7 @@ import 'presentation/screens/sign_up.dart';
 
 class AppRouter {
   static Route? generateRoute(RouteSettings settings) {
+    final args = settings.arguments;
     switch (settings.name) {
       case welcomePage:
         return MaterialPageRoute(builder: (_) => WelcomePage());
@@ -19,6 +22,11 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => HomeScreen());
       case addNote:
         return MaterialPageRoute(builder: (_) => AddNote());
+      case editNote:
+        return MaterialPageRoute(
+            builder: (_) => EditNote(
+                  noteSnapshot: args as DocumentSnapshot,
+                ));
     }
     return null;
   }
